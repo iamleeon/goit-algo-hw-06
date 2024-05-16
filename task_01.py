@@ -14,11 +14,16 @@ class Name(Field):
 
 
 class Phone(Field):
+    def __init__(self, value):
+        if not self.phone_validation(value):
+            raise ValueError("Invalid phone format")
+        super().__init__(value)
+
     def phone_validation(self, phone):
-        if len(phone) == 10:
+        if len(phone) == 10 and int(phone) != True:
             return phone
         else:
-            return f"Phone number should be 10 digits"
+            return None
 
 
 class Record:
@@ -40,7 +45,7 @@ class Record:
     def find_phone(self, phone):
         for p in self.phones:
             if phone == str(p):
-                return phone
+                return Phone(phone)
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
